@@ -1,51 +1,66 @@
-var rain = 1200;
-var drops = [];
-var canv,strokeDrop,colR,colG,colB;
-var strokeSlider, rainSlider,r,g,b,v;
-function setup(){
-  canv = createCanvas(windowWidth,windowHeight);
-  canv.position(0,0);
-  background(240);
-  rainSlider = createSlider(1,3000,1200,10);
-  rainSlider.position(10,30);
-  strokeSlider = createSlider(1,7,2,0.1);
-  strokeSlider.position(10,80);
-  colR = createSlider(0,255,0,1);
-  colR.position(10,130);
-  colG = createSlider(0,255,0,1);
-  colG.position(10,180);
-  colB = createSlider(0,255,255,1);
-  colB.position(10,230);
-  for(var i = 0; i< rainSlider.value(); i++){
-    drops.push(new Drop());
-  }
-}
-function draw(){
-  background(240);
-  rain = rainSlider.value();
-  strokeDrop = strokeSlider.value();
-  r = colR.value();
-  g = colG.value();
-  b = colB.value();
-  textSize(16);
-  fill(0, 0, 0);
-  noStroke();
-  text('Drops: ' + rain, 10, 10, 100, 100);
-  text('Weight: ' + strokeDrop, 10, 60, 100, 100);
-  text('Red: ' + r, 10, 110, 100, 100);
-  text('Green: ' + g, 10, 160, 100, 100);
-  text('Blue: ' + b, 10, 210, 100, 100);
-  while(drops.length < rain ){
-    drops.push(new Drop());
-  }
-  while(drops.length >  rain){
-    drops.pop();
-  }
-  for(var i = 0; i< rain; i++){
-    drops[i].behave(strokeDrop,r,g,b);
-  }
-}
+var rain = (function(){
+  // body...
+  //variables
+  let drops = [];
+  let weight = 4;
+  const rainColor ={
+      r: 0,
+      g: 0,
+      b: 5
+  };
 
-function windowResized(){
-  resizeCanvas(windowWidth,windowHeight)
-}
+  const getColor = function(){
+    return rainColor;
+  };
+  const setColor = function(r,g,b){
+    if(rainColor.r !== r && typeof(r) === 'number') rainColor.r = r;
+    if(rainColor.g !== g && typeof(r) === 'number') rainColor.g = g;
+    if(rainColor.b !== b && typeof(r) === 'number') rainColor.b = b;
+  };
+
+  const getWeight = function(){
+    return weight;
+  };
+  const setWeight = function(w){
+    if(weight !== w && typeof(w) === 'number')
+    {
+      weight = w;
+    }
+  };
+
+  const getDrops = function(){
+    return drops.length;
+  };
+  const setDrops = function(amount){
+    if(drops.lenght !== amount && typeof(amount) === 'number'){
+      while(drops.length < amount ){
+        drops.push(new Drop());
+      }
+      while(drops.length > amount){
+        drops.pop();
+      }
+    }
+  };
+
+  const Behave = function(){
+    for( let drop of drops){
+      drop.behave(weight,rainColor.r,rainColor.g,rainColor.b);
+    }
+  };
+
+  const draw = function(w,r,g,b,a){
+    setWeight(w);
+    setColor(r,g,b);
+    setDrops(a);
+    Behave();
+  };
+
+  return {
+    getColor:getColor,
+    getDrops:getDrops,
+    getWeight:getWeight,
+    behave: Behave,
+    draw: draw,
+  };
+
+})();
