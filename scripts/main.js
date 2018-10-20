@@ -1,5 +1,7 @@
-var canv,strokeDrop,colR,colG,colB;
-var strokeSlider, rainSlider,r,g,b;
+let canv,colR,colG,colB,strokeSlider, rainSlider;
+let r,g,b,strokeDrop, amount;
+
+
 function setup(){
 
   // ------ Canvas and sliders -----------
@@ -17,11 +19,10 @@ function setup(){
   colB = createSlider(0,255,rain.getColor().b,1);
   colB.position(10,230);
 // -------------------
-
-
-
-
 }
+
+
+
 function draw(){
   background(240);
   strokeDrop = strokeSlider.value();
